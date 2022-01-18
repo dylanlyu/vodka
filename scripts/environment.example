@@ -1,0 +1,8 @@
+export DB_REPLICAS=0
+export SOURCES_HOST=127.0.0.1
+export SOURCES_PORT=5432
+export SOURCES_USER=postgres
+export SOURCES_PASSWORD=
+export SOURCES_DATABASE=replicas_database
+export SOURCES_SSLMODE=disable
+air

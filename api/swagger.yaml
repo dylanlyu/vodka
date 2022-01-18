@@ -1,0 +1,885 @@
+basePath: /
+definitions:
+  accounts.Created:
+    properties:
+      account:
+        description: 帳號
+        type: string
+      name:
+        description: 中文名稱
+        type: string
+      password:
+        description: 密碼
+        type: string
+      role_id:
+        description: 角色編號
+        type: string
+    required:
+    - account
+    - name
+    - password
+    - role_id
+    type: object
+  accounts.List:
+    properties:
+      accounts:
+        items:
+          properties:
+            account:
+              description: 帳號
+              type: string
+            account_id:
+              description: 編號
+              type: string
+            company_id:
+              description: 公司ID
+              type: string
+            name:
+              description: 中文名稱
+              type: string
+            role_id:
+              description: 角色編號
+              type: string
+          type: object
+        type: array
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  accounts.Single:
+    properties:
+      account:
+        description: 帳號
+        type: string
+      account_id:
+        description: 編號
+        type: string
+      company_id:
+        description: 公司ID
+        type: string
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      name:
+        description: 中文名稱
+        type: string
+      password:
+        description: 密碼
+        type: string
+      role_id:
+        description: 角色編號
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  accounts.Updated:
+    properties:
+      company_id:
+        description: 組織ID
+        type: string
+      name:
+        description: 中文名稱
+        type: string
+      password:
+        description: 密碼
+        type: string
+      role_id:
+        description: 角色編號
+        type: string
+    type: object
+  code.ErrorMessage:
+    properties:
+      code:
+        description: 回傳代碼
+        type: integer
+      detailed:
+        description: 詳細錯誤內容
+      message:
+        description: 錯誤回傳訊息
+        type: string
+      timestamp:
+        description: 錯誤時間
+        example: "2021-07-29T07:23:47Z"
+        type: string
+    type: object
+  code.SuccessfulMessage:
+    properties:
+      body:
+        description: 正確回傳內容
+      code:
+        description: 回傳代碼
+        type: integer
+      timestamp:
+        description: 錯誤時間
+        example: "2021-07-29T07:23:47Z"
+        type: string
+    type: object
+  companies.Created:
+    properties:
+      name:
+        description: 公司名稱
+        type: string
+      uniform_number:
+        description: 公司統一編號
+        type: integer
+    required:
+    - name
+    - uniform_number
+    type: object
+  companies.List:
+    properties:
+      companies:
+        description: 多筆公司
+        items:
+          properties:
+            company_id:
+              description: 公司編號
+              type: string
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            name:
+              description: 公司名稱
+              type: string
+            uniform_number:
+              description: 公司統一編號
+              type: integer
+          type: object
+        type: array
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  companies.Single:
+    properties:
+      company_id:
+        description: 公司編號
+        type: string
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      name:
+        description: 公司名稱
+        type: string
+      uniform_number:
+        description: 公司統一編號
+        type: integer
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  companies.Updated:
+    properties:
+      name:
+        description: 公司名稱
+        type: string
+      uniform_number:
+        description: 公司統一編號
+        type: integer
+    type: object
+  jwe.Refresh:
+    properties:
+      refresh_token:
+        description: 刷新令牌
+        type: string
+    required:
+    - refresh_token
+    type: object
+  jwe.Token:
+    properties:
+      access_token:
+        description: 授權令牌
+        type: string
+      refresh_token:
+        description: 刷新令牌
+        type: string
+    type: object
+  logins.Login:
+    properties:
+      account:
+        description: 帳號
+        type: string
+      company_id:
+        description: 公司ID
+        type: string
+      password:
+        description: 密碼
+        type: string
+    required:
+    - account
+    - company_id
+    - password
+    type: object
+host:
+info:
+  contact:
+    email: mingzong.lyu@gmail.com
+    name: API System Support
+    url:
+  description: 企業系統整合管理平台
+  license:
+    name: AGPL 3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  termsOfService:
+  title: vodka SYSTEM API
+  version: "0.1"
+paths:
+  /authority/v1.0/accounts:
+    get:
+      consumes:
+      - application/json
+      description: 條件使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 組織ID
+        in: query
+        name: organizationID
+        type: string
+      - description: 帳號
+        in: query
+        name: account
+        type: string
+      - description: 中文名稱
+        in: query
+        name: chineseName
+        type: string
+      - description: 角色名稱
+        in: query
+        name: roleName
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/accounts.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 條件搜尋使用者
+      tags:
+      - Account
+    post:
+      consumes:
+      - application/json
+      description: 新增使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增使用者
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/accounts.Created'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增使用者
+      tags:
+      - Account
+  /authority/v1.0/accounts/{accountID}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 使用者ID
+        in: path
+        name: accountID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一使用者
+      tags:
+      - Account
+    get:
+      consumes:
+      - application/json
+      description: 取得單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 使用者ID
+        in: path
+        name: accountID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/accounts.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一使用者
+      tags:
+      - Account
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 使用者ID
+        in: path
+        name: accountID
+        required: true
+        type: string
+      - description: 更新使用者
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/accounts.Updated'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一使用者
+      tags:
+      - Account
+  /authority/v1.0/companies:
+    get:
+      consumes:
+      - application/json
+      description: 條件公司行號
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 公司名稱
+        in: query
+        name: name
+        type: string
+      - description: 公司統一編號
+        in: query
+        name: uniform_number
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/companies.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 條件搜尋公司行號
+      tags:
+      - Companies
+    post:
+      consumes:
+      - application/json
+      description: 新增公司行號
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增公司行號
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/companies.Created'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增公司行號
+      tags:
+      - Companies
+  /authority/v1.0/companies/{companyID}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除公司
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 公司編號
+        in: path
+        name: company_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除公司
+      tags:
+      - Companies
+    get:
+      consumes:
+      - application/json
+      description: 取得單一公司行號
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 公司編號
+        in: path
+        name: company_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/companies.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一公司行號
+      tags:
+      - Companies
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 公司編號
+        in: path
+        name: companyID
+        required: true
+        type: string
+      - description: 更新公司
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/companies.Updated'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一使用者
+      tags:
+      - Companies
+  /authority/v1.0/login/refresh:
+    post:
+      consumes:
+      - application/json
+      description: 換新的令牌
+      parameters:
+      - description: 登入帶入
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/jwe.Refresh'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/jwe.Token'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 換新的令牌
+      tags:
+      - Login
+  /authority/v1.0/login/web:
+    post:
+      consumes:
+      - application/json
+      description: 使用者登入
+      parameters:
+      - description: 登入帶入
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/logins.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/jwe.Token'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 使用者登入
+      tags:
+      - Login
+schemes:
+- https
+swagger: "2.0"
