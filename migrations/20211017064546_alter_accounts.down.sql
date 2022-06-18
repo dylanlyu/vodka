@@ -1,1 +1,0 @@
-alter table accounts rename column company_id to organization_id;
