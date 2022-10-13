@@ -2,21 +2,20 @@ package main
 
 // main is run all api form localhost port 8080
 
-// @title Vodka SYSTEM API
+// @title Whisky SYSTEM API
 // @version 0.1
-// @description 企業系統整合管理平台
-// @termsOfService https://vodka.app/
+// @description JG Server API
+// @termsOfService https:///
 
 // @contact.name API System Support
-// @contact.url https://vodka.app/
+// @contact.url https:///
 // @contact.email mingzong.lyu@gmail.com
 
-// @license.name AGPL 3.0
-// @license.url https://www.gnu.org/licenses/agpl-3.0.en.html
+// @license.name MIT
+// @license.url https://opensource.org/licenses/mit-license.php
 
-// @host api.vodka.app
+// @host api.testing.whisky.inherited.app
 // @BasePath /
 // @schemes https
 func main() {
-
 }

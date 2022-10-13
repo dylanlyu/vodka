@@ -1,0 +1,13 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/go:1.18.3
+      steps:
+        - checkout
+        - run: go version
+workflows:
+  sample:
+    jobs:
+      - build

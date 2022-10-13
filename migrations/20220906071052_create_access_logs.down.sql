@@ -1,0 +1,11 @@
+drop index idx_access_logs_deleted_at;
+drop index idx_access_logs_updated_at;
+drop index idx_access_logs_created_at;
+drop index idx_access_logs_status;
+drop index idx_access_logs_msg;
+drop index idx_access_logs_api;
+drop index idx_access_logs_method;
+drop index idx_access_logs_member_id;
+drop index idx_access_logs_ip_address;
+drop index idx_access_logs_id;
+drop table access_logs;

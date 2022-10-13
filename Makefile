@@ -2,9 +2,10 @@ SCRIPTS = $(shell pwd)/scripts
 PROJECT = $(shell pwd)
 GO = $(shell which go)
 OUTPUTS = $(shell pwd)/deploy
+TAG ?= debug
 
 authority:
-	GOOS=linux GOARCH=amd64 $(GO) build -o $(OUTPUTS)/authority cmd/lambda/authority.go
+	GOOS=linux GOARCH=amd64 $(GO) build -tags $(TAG) -o $(OUTPUTS)/authority cmd/lambda/authority.go
 	zip -D -j -r $(OUTPUTS)/authority.zip $(OUTPUTS)/authority
 
 clean:
@@ -12,40 +13,21 @@ clean:
 
 task:
 	make clean
-	make accounts
+	make authority
 
 setup:
-	cp $(SCRIPTS)/environment.example $(SCRIPTS)/debug.sh
-	cp $(SCRIPTS)/environment.example $(SCRIPTS)/testing.sh
-	cp $(SCRIPTS)/environment.example $(SCRIPTS)/production.sh
-	cp $(SCRIPTS)/migration.example $(SCRIPTS)/migrationDebug.sh
-	cp $(SCRIPTS)/migration.example $(SCRIPTS)/migrationTesting.sh
-	cp $(SCRIPTS)/migration.example $(SCRIPTS)/migrationProduction.sh
+	cp $(PROJECT)/config/config.go.example $(PROJECT)/config/debug_config.go
+	cp $(PROJECT)/config/config.go.example $(PROJECT)/config/production_config.go
 	cp $(PROJECT)/air.example $(PROJECT)/.air.toml
 
-debug:
-	chmod a+x $(SCRIPTS)/debug.sh
-	$(SCRIPTS)/debug.sh
+air:
+	air
 
-testing:
-	chmod a+x $(SCRIPTS)/testing.sh
-	$(SCRIPTS)/testing.sh
+migration:
+	go run -tags $(TAG) $(PROJECT)/tools/migration/migration.go
 
-production:
-	chmod a+x $(SCRIPTS)/production.sh
-	$(SCRIPTS)/production.sh
-
-migrationDebug:
-	chmod a+x $(SCRIPTS)/migrationDebug.sh
-	$(SCRIPTS)/migrationDebug.sh
-
-migrationTesting:
-	chmod a+x $(SCRIPTS)/migrationTesting.sh
-	$(SCRIPTS)/migrationTesting.sh
-
-migrationProduction:
-	chmod a+x $(SCRIPTS)/migrationProduction.sh
-	$(SCRIPTS)/migrationProduction.sh
+ssh:
+	go run -tags $(TAG) $(PROJECT)/tools/ssh/ssh.go
 
 changeLog:
-	git-chglog > ./README.md
+	git-chglog > ./changeLog.md
